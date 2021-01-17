@@ -4,8 +4,9 @@
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-  <Compile Include="Logger.fs" />
-    <Compile Include="ArgParser.fs" />
+    <Compile Include="helpers/Templates.fs" />
+    <Compile Include="helpers/Logger.fs" />
+    <Compile Include="helpers/ArgParser.fs" />
     <Compile Include="Main.fs" />
   </ItemGroup>
   <ItemGroup>
