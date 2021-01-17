@@ -62,7 +62,17 @@ let upgradeMigration _args =
             |> Sql.password args.Password
             |> Sql.port args.Port
             |> Sql.formatConnectionString
-            
+        
+        // TODO:
+            // read latest migration in the fazor_version table
+
+            // read and run next chronological migration from file
+
+            // update previous and current migration fields in the fazor_version table row
+
+            // repeat until latest migration reached
+
+
         match runMigration connStr with
         | Ok _ -> Logger.ok $"Migration succeeded!"
         | Error e -> Logger.error $"Migration failed! Here's the stacktrace: \n\n{e}\n"
