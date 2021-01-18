@@ -1,4 +1,4 @@
-namespace Logger
+namespace Fazor
 
 module Logger =
 

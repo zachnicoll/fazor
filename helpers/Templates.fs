@@ -1,40 +1,19 @@
-namespace Templates
+namespace Fazor
 
 module Templates =
-    type Direction =
-        | UPGRADE
-        | DOWNGRADE
+    open System
 
-    let migrationTemplate date name (direction: Direction) =
-        $"/* DO NOT ALTER THESE LINES */
--- DATE {date}
--- NAME {name}
--- TYPE {direction}
-/*                          */
-
--- INSERT MIGRATION SCRIPT BELOW"
-
-    let createFazorTable =
-      $"CREATE TABLE IF NOT EXISTS fazor_version (
-  current TEXT NOT NULL,
-  previous TEXT NOT NULL
-);
-
-INSERT INTO fazor_version VALUES ('initial', 'initial');"
-
-    let dropFazorTable = "DROP TABLE IF EXIST fazor_version;"
+    let migrationTemplate name =
+        $"-- FAZOR MIGRATION SCRIPT\n-- ID {Guid.NewGuid()}\n-- NAME {name}\n-- INSERT MIGRATION SCRIPT BELOW\n"
 
     let initFazorScript =
-        $"/* DO NOT ALTER THIS FILE*/
--- NAME initial
--- TYPE UPGRADE
-
-{createFazorTable}
-/*                          */"
+        migrationTemplate "inital"
+        |> fun str -> str.Replace("-- INSERT MIGRATION SCRIPT BELOW", "-- DO NOT CHANGE THIS FILE")
+        |> fun str ->
+            str
+            + "CREATE TABLE IF NOT EXISTS fazor_version (\n\tcurrent TEXT NOT NULL,\n\tprevious TEXT NOT NULL\n);\nINSERT INTO fazor_version VALUES ('initial', 'initial');\n"
 
     let dropFazorScript =
-      $"/* DO NOT ALTER THIS FILE*/
--- NAME initial
--- TYPE UPGRADE
-{dropFazorTable}
-/*                          */"
+        migrationTemplate "inital"
+        |> fun str -> str.Replace("-- INSERT MIGRATION SCRIPT BELOW", "-- DO NOT CHANGE THIS FILE")
+        |> fun str -> str + "DROP TABLE IF EXISTS fazor_version;\n"

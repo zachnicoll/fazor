@@ -1,8 +1,6 @@
-namespace ArgParser
+namespace Fazor
 
 module ArgParser =
-    open Logger
-
     type CommandLineOptions =
         { Host: string
           Port: int
@@ -17,46 +15,48 @@ module ArgParser =
           Password = ""
           Database = "" }
 
+    let sliceRest (l: list<string>) = l.GetSlice(Some 1, Some(l.Length - 1))
+
     let rec parseCommandLine args optionsSoFar =
         match args with
         // empty list means we're done.
         | [] -> optionsSoFar
 
-        | "--h" :: remainder -> 
+        | "--h" :: rest -> 
             Logger.warn "Help argument found, use --h on its own to see the help information!"
-            parseCommandLine remainder optionsSoFar
+            parseCommandLine rest optionsSoFar
 
-        | "--host" :: remainder ->
+        | "--host" :: rest ->
             parseCommandLine
-                (remainder.GetSlice(Some 1, Some(remainder.Length - 1)))
+                (sliceRest rest)
                 { optionsSoFar with
-                      Host = remainder.[0] }
+                      Host = rest.[0] }
 
-        | "--port" :: remainder ->
+        | "--port" :: rest ->
             parseCommandLine
-                (remainder.GetSlice(Some 1, Some(remainder.Length - 1)))
+                (sliceRest rest)
                 { optionsSoFar with
-                      Port = remainder.[0] |> int}
+                      Port = rest.[0] |> int}
 
-        | "--user" :: remainder ->
+        | "--user" :: rest ->
             parseCommandLine
-                (remainder.GetSlice(Some 1, Some(remainder.Length - 1)))
+                (sliceRest rest)
                 { optionsSoFar with
-                      Username = remainder.[0] }
+                      Username = rest.[0] }
 
-        | "--pass" :: remainder ->
+        | "--pass" :: rest ->
             parseCommandLine
-                (remainder.GetSlice(Some 1, Some(remainder.Length - 1)))
+                (sliceRest rest)
                 { optionsSoFar with
-                      Password = remainder.[0] }
+                      Password = rest.[0] }
 
-        | "--database" :: remainder ->
+        | "--database" :: rest ->
             parseCommandLine
-                (remainder.GetSlice(Some 1, Some(remainder.Length - 1)))
+                (sliceRest rest)
                 { optionsSoFar with
-                      Database = remainder.[0] }
+                      Database = rest.[0] }
 
         // handle unrecognized option and keep looping
-        | x :: remainder ->
+        | x :: rest ->
             Logger.warn $"Argument {x} is unrecognized"
-            parseCommandLine remainder optionsSoFar
+            parseCommandLine rest optionsSoFar
