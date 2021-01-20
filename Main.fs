@@ -12,6 +12,7 @@ module Main =
 
     let initFazor () =
         match checkMigrationDir () with
+        | true -> Logger.error "Cannot initialise fazor in current directory, fazor directory already exists!"
         | false ->
             Logger.info "Creating fazor migrations directory in current folder..."
 
@@ -24,7 +25,6 @@ module Main =
                 File.WriteAllText(dir.FullName + "down.sql", dropFazorScript)
 
             Logger.complete "Setup completed! Please run fazor upgrade to apply migration!"
-        | true -> Logger.error "Cannot initialise fazor in current directory, fazor directory already exists!"
 
     let createMigration (name: String) =
         DateTimeOffset.UtcNow.ToUnixTimeSeconds()
