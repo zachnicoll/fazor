@@ -6,17 +6,17 @@ module Logger =
 
     let log =
         let lockObj = obj()
-        fun color s ->
+        fun color pre s ->
             lock lockObj (fun _ ->
                 Console.ForegroundColor <- color
-                printfn "%s" s
+                printfn $"{pre} {s}"
                 Console.ResetColor())
 
-    let complete = log ConsoleColor.Magenta
-    let ok = log ConsoleColor.Green
-    let info = log ConsoleColor.Cyan
-    let warn = log ConsoleColor.Yellow
-    let error = log ConsoleColor.Red
+    let complete = log ConsoleColor.Magenta "DONE:"
+    let ok = log ConsoleColor.Green "OK:"
+    let info = log ConsoleColor.Cyan "INFO:"
+    let warn = log ConsoleColor.Yellow "WARN:"
+    let error = log ConsoleColor.Red "ERROR:"
     
     let helpMessage () =
         info """
