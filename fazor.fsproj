@@ -5,8 +5,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="helpers/Logger.fs" />
-    <Compile Include="helpers/Queries.fs" />
     <Compile Include="helpers/Templates.fs" />
+    <Compile Include="helpers/Queries.fs" />
     <Compile Include="helpers/ArgParser.fs" />
     <Compile Include="Main.fs" />
   </ItemGroup>

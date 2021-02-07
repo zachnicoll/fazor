@@ -11,9 +11,12 @@ module Templates =
         |> fun str -> str.Replace("-- INSERT MIGRATION SCRIPT BELOW", "-- DO NOT CHANGE THIS FILE")
         |> fun str ->
             str
-            + "CREATE TABLE IF NOT EXISTS fazor_version (\n\tcurrent TEXT NOT NULL,\n\tprevious TEXT NOT NULL\n);\nINSERT INTO fazor_version VALUES ('initial', 'initial');\n"
+            + "CREATE TABLE IF NOT EXISTS fazor_version (\n\tcurrent TEXT NOT NULL\n);\nINSERT INTO fazor_version VALUES ('initial');\n"
 
     let dropFazorScript =
         migrationTemplate "inital"
         |> fun str -> str.Replace("-- INSERT MIGRATION SCRIPT BELOW", "-- DO NOT CHANGE THIS FILE")
         |> fun str -> str + "DROP TABLE IF EXISTS fazor_version;\n"
+    
+    let updateVerScript currVer =
+        $"UPDATE fazor_version SET \"current\" = '{currVer}';"

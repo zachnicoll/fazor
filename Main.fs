@@ -8,7 +8,9 @@ module Main =
     open Queries
     open ArgParser
 
-    let checkMigrationDir () = Directory.Exists("./fazor/migrations")
+    let migrationDir () = "./fazor/migrations/"
+
+    let checkMigrationDir () = Directory.Exists(migrationDir ())
 
     let initFazor () =
         match checkMigrationDir () with
@@ -16,7 +18,7 @@ module Main =
         | false ->
             Logger.info "Creating fazor migrations directory in current folder..."
 
-            Directory.CreateDirectory "./fazor/migrations/"
+            Directory.CreateDirectory(migrationDir ())
             |> fun dir ->
                 Logger.info "Creating initial migration..."
                 Directory.CreateDirectory(dir.FullName + "initial/")
@@ -28,7 +30,7 @@ module Main =
 
     let createMigration (name: String) =
         DateTimeOffset.UtcNow.ToUnixTimeSeconds()
-        |> fun time -> Directory.CreateDirectory $"./fazor/migrations/{time}_{name.Replace(' ', '_').Trim()}"
+        |> fun time -> Directory.CreateDirectory $"{migrationDir ()}{time}_{name.Replace(' ', '_').Trim()}"
         |> fun dir ->
             File.WriteAllText($"{dir.FullName}/up.sql", migrationTemplate dir.Name)
             File.WriteAllText($"{dir.FullName}/down.sql", migrationTemplate dir.Name)
@@ -47,22 +49,49 @@ module Main =
         | false -> Logger.error "Cannot find fazor migrations directory, please run fazor init"
 
     let extractAndRunScript filePath conn =
-        match File.Exists("./fazor/migrations/" + filePath) with
-        | true ->
-            Logger.info $"Found migration script '{filePath}...'"
+        migrationDir () + filePath
+        |> fun fullPath ->
+            match File.Exists(fullPath) with
+            | true ->
+                Logger.info $"Found migration script '{filePath}...'"
 
-            File.ReadAllText("./fazor/migrations/" + filePath)
-            |> fun script -> runScript script conn
-        | false -> Logger.error $"Could not find script '{filePath}', aborting!"
+                File.ReadAllText(fullPath)
+                |> fun script -> runScript script conn
+            | false -> Logger.error $"Could not find script '{filePath}', aborting!"
 
     let runUpgrade (sqlConn: Sql.SqlProps) =
         match fetchVersion sqlConn with
         | Some ver ->
             if ver.Length = 0 then
                 Logger.warn $"Could not find fazor_version table, performing initial migration..."
-                extractAndRunScript "initial/up.sql" sqlConn
+                extractAndRunScript "initial/up.sql" sqlConn // Apply initial migration
             else
-                Logger.info $"Found current version ID {ver}..."
+                ver.[0]
+                |> fun currVer ->
+                    Logger.info $"Found current version ID {currVer}..."
+
+                    Array.filter
+                        (fun (elem: string) -> not (elem.Contains(migrationDir () + "initial")))
+                        (Directory.GetDirectories(migrationDir ()))
+                    |> List.ofArray
+                    |> List.map (fun elem -> elem.Split(migrationDir()).[1])
+                    |> List.sort
+                    |> fun l ->
+                        if currVer <> "initial" then
+                            List.findIndex (fun elem -> elem = currVer) l
+                            |> fun i -> snd (List.splitAt (i) l)
+                        else
+                            l // Use all migrations if only initial migration has been used so far
+                    |> List.map
+                        (fun elem ->
+                            Logger.info $"Running upgrade script in {elem}..."
+                            extractAndRunScript (elem + "/up.sql") sqlConn
+                            updateCurrentVersion elem sqlConn)
+                            // Logger.ok $"Successfully ran script!")
+                    |> ignore
+
+                    Logger.complete "Migration upgrade complete!"
+
         | None -> Logger.error "Upgrade failed!"
 
     // TODO:
