@@ -94,16 +94,11 @@ module Main =
 
         | None -> Logger.error "Upgrade failed!"
 
-    // TODO:
-    // read latest migration in the fazor_version table
-    // read and run next chronological migration from file
-    // update previous and current migration fields in the fazor_version table row
-    // repeat until latest migration reached
-
     let runDowngrade (sqlConn: Sql.SqlProps) =
         match fetchVersion sqlConn with
         | Some ver -> Logger.info $"Found current version ID {ver}..."
         | None -> Logger.error "Downgrade failed!"
+        // TODO: implement downgrade script execution
 
     let makeConnection _args =
         parseCommandLine _args DefaultOptions

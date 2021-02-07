@@ -1,10 +1,8 @@
 namespace Fazor
 
 module Templates =
-    open System
-
     let migrationTemplate name =
-        $"-- FAZOR MIGRATION SCRIPT\n-- ID {Guid.NewGuid()}\n-- NAME {name}\n-- INSERT MIGRATION SCRIPT BELOW\n"
+        $"-- FAZOR MIGRATION SCRIPT\n-- NAME {name}\n-- INSERT MIGRATION SCRIPT BELOW\n"
 
     let initFazorScript =
         migrationTemplate "inital"
