@@ -8,6 +8,13 @@
     <Compile Include="helpers/Templates.fs" />
     <Compile Include="helpers/Queries.fs" />
     <Compile Include="helpers/ArgParser.fs" />
+    <Compile Include="helpers/Dir.fs" />
+    <Compile Include="helpers/Connect.fs" />
+    <Compile Include="helpers/Run.fs" />
+    <Compile Include="commands/Init.fs" />
+    <Compile Include="commands/New.fs" />
+    <Compile Include="commands/Upgrade.fs" />
+    <Compile Include="commands/Downgrade.fs" />
     <Compile Include="Main.fs" />
   </ItemGroup>
   <ItemGroup>

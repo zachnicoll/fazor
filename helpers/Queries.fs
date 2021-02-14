@@ -16,11 +16,6 @@ module Queries =
               Logger.error $"Error fetching current fazor migration version\n{e}"
               None
 
-    let runScript script sqlConn =
-        match (sqlConn |> Sql.query script |> Sql.executeNonQuery) with
-        | Ok _ -> Logger.ok "Successfully executed script!"
-        | Error e -> Logger.error $"Script execution failed!\n{e}"
-
     let updateCurrentVersion currVer sqlConn =
         updateVerScript currVer
         |> fun script -> 
