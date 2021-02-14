@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <metadata>
+        <id>fazor</id>
+        <version>1.0.0</version>
+        <authors>Zachary Nicoll</authors>
+        <description>A functional database migration tool for easy integration with F#!</description>
+        <language>en-AU</language>
+        <projectUrl>https://github.com/zachnicoll/fazor</projectUrl>
+        <license type="expression">MIT</license>
+    </metadata>
+</package>

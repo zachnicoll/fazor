@@ -9,8 +9,7 @@ module Connect =
     |> fun args ->
         match (args.Database.Equals ""
                || args.Username.Equals ""
-               || args.Password.Equals ""
-               || args.Host.Equals "") with
+               || args.Password.Equals "") with
         | false ->
             Logger.info
                 $"Connecting to postgresql://{args.Host}:{args.Port}/{args.Database} as '{args.Username}'..."
