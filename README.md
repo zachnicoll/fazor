@@ -1,4 +1,4 @@
-# fazor
+<img src="https://i.imgur.com/RgoFMBa.png" alt="fazor logo" width="300">
 Tire of using dotnet Entity Framework for your database migrations? Try fazor!
 
 ## Usage

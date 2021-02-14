@@ -3,8 +3,16 @@
     <metadata>
         <id>fazor</id>
         <version>1.0.0</version>
+        <owner></owner>
+        <title>fazor</title>
         <authors>Zachary Nicoll</authors>
         <description>A functional database migration tool for easy integration with F#!</description>
+        <summary></summary>
+        <releaseNotes></releaseNotes>
+        <repositoryUrl>https://github.com/zachnicoll/fazor</repositoryUrl>
+        <repositoryType>Open Source</repositoryType>
+        <iconUrl>https://i.imgur.com/RgoFMBa.png</iconUrl>
+        <tags>Migration</tags>
         <language>en-AU</language>
         <projectUrl>https://github.com/zachnicoll/fazor</projectUrl>
         <license type="expression">MIT</license>
