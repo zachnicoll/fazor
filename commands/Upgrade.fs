@@ -16,28 +16,32 @@ module Upgrade =
         else
             ver.[0]
             |> fun currVer ->
-                Logger.info $"Found current version ID {currVer}..."
+                Logger.info $"Found current version {currVer}..."
 
-                Array.filter
-                    (fun (elem: string) -> not (elem.Contains(migrationDir () + "initial")))
-                    (Directory.GetDirectories(migrationDir ()))
-                |> List.ofArray
-                |> List.map (fun elem -> elem.Split(migrationDir()).[1])
-                |> List.sort
-                |> fun l ->
-                    if currVer <> "initial" then
-                        List.findIndex (fun elem -> elem = currVer) l
-                        |> fun i -> snd (List.splitAt (i) l)
-                    else
-                        l // Use all migrations if only initial migration has been used so far
-                |> List.map
-                    (fun elem ->
-                        Logger.info $"Running upgrade script in {elem}..."
-                        extractAndRunScript (elem + "/up.sql") sqlConn
-                        updateCurrentVersion elem sqlConn)
-                        // Logger.ok $"Successfully ran script!")
-                |> ignore
+                let scriptsToRun = 
+                    Array.filter
+                        // Filter out the initial migration
+                        (fun (elem: string) -> not (elem.Contains("initial")))
+                        (Directory.GetDirectories(migrationDir ()))
+                    |> Array.map (fun elem -> elem.Split(migrationDir()).[1])
+                    |> Array.sort
+                    |> fun l ->
+                        if currVer <> "initial" && l.Length > 0 then
+                            // Split the array at the index of the current version and return the second part
+                            // This will be all the scripts that have not been run yet
+                            Array.findIndex (fun elem -> elem = currVer) l
+                            |> fun i -> snd (Array.splitAt (i) l)
+                            |> Array.filter (fun e -> not (e.Contains(currVer)))
+                        else
+                            l // Use all migrations if only initial migration has been used so far
+                
+                match scriptsToRun.Length with
+                | 0 -> Logger.ok "Database already up to date, no migrations to run."
+                | _ ->
+                    for script in scriptsToRun do
+                        extractAndRunScript (script + "/up.sql") sqlConn
+                        updateCurrentVersion script sqlConn
 
-                Logger.complete "Migration upgrade complete!"
+                Logger.complete "Upgrade complete!"
 
     | None -> Logger.error "Upgrade failed!"
