@@ -26,6 +26,7 @@ jobs:
     - name: Pack
       run: dotnet pack
     - name: Publish
-      CURRENT_VERSION: $(< .nuspec grep -oP '\<version\>(.*)\</version\>' | sed 's/[version<>/]//g')
+      variables:
+        CURRENT_VERSION: $(< .nuspec grep -oP '\<version\>(.*)\</version\>' | sed 's/[version<>/]//g')
       run: dotnet nuget push /home/runner/work/fazor/fazor/bin/Debug/fazor.$CURRENT_VERSION.nupkg --api-key $API_KEY --source https://api.nuget.org/v3/index.json --skip-duplicate
     
