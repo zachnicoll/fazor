@@ -26,6 +26,6 @@ jobs:
     - name: Pack
       run: dotnet pack
     - name: Publish
-      run: dotnet nuget push ./bin/Debug/fazor.1.0.0.nupkg --api-key $API_KEY --source https://api.nuget.org/v3/index.json
+      run: dotnet nuget push ./bin/Debug/*.nupkg --api-key $API_KEY --source https://api.nuget.org/v3/index.json
 
     
