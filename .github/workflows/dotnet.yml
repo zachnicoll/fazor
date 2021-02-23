@@ -20,20 +20,32 @@ jobs:
         run: dotnet restore
       - name: Build
         run: dotnet build --no-restore
-  
+      - uses: actions/upload-artifact@master
+        with:
+          name: solution-folder
+          path: ./
+
   test:
     needs: build
     runs-on: ubuntu-latest
 
     steps:
+      - uses: actions/download-artifact@master
+        with:
+          name: solution-folder
+          path: ./
       - name: Test
-        run: dotnet test --no-build --verbosity normal
+        run: ls && dotnet test --no-build --verbosity normal
 
   deploy:
     needs: [build, test]
     runs-on: ubuntu-latest
 
     steps:
+      - uses: actions/download-artifact@master
+        with:
+          name: solution-folder
+          path: ./
       - name: Pack
         run: dotnet pack
       - name: Publish
