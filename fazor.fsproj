@@ -5,18 +5,18 @@
     <NuspecFile>.nuspec</NuspecFile>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="helpers/Logger.fs" />
-    <Compile Include="helpers/Templates.fs" />
-    <Compile Include="helpers/Queries.fs" />
-    <Compile Include="helpers/ArgParser.fs" />
-    <Compile Include="helpers/Dir.fs" />
-    <Compile Include="helpers/Connect.fs" />
-    <Compile Include="helpers/Run.fs" />
-    <Compile Include="commands/Init.fs" />
-    <Compile Include="commands/New.fs" />
-    <Compile Include="commands/Upgrade.fs" />
-    <Compile Include="commands/Downgrade.fs" />
-    <Compile Include="Main.fs" />
+    <Compile Include="src/helpers/Logger.fs" />
+    <Compile Include="src/helpers/Templates.fs" />
+    <Compile Include="src/helpers/Queries.fs" />
+    <Compile Include="src/helpers/ArgParser.fs" />
+    <Compile Include="src/helpers/Dir.fs" />
+    <Compile Include="src/helpers/Connect.fs" />
+    <Compile Include="src/helpers/Run.fs" />
+    <Compile Include="src/commands/Init.fs" />
+    <Compile Include="src/commands/New.fs" />
+    <Compile Include="src/commands/Upgrade.fs" />
+    <Compile Include="src/commands/Downgrade.fs" />
+    <Compile Include="src/Main.fs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Npgsql.FSharp" Version="3.12.3" />
