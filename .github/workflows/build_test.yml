@@ -1,10 +1,14 @@
-name: Build, Test, Deploy
+name: Build, Test
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
+      - 'feature/**'
   pull_request:
-    branches: [main]
+    branches:
+      - main
+      - 'feature/**'
 
 jobs:
   build:
@@ -36,20 +40,3 @@ jobs:
           path: ./
       - name: Test
         run: dotnet test --no-build --verbosity normal
-
-  deploy:
-    needs: [build, test]
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/download-artifact@master
-        with:
-          name: solution-folder
-          path: ./
-      - name: Pack
-        run: dotnet pack
-      - name: Publish
-        run: |
-          CURRENT_VERSION=$(< .nuspec grep -oP '\<version\>(.*)\</version\>' | sed 's/[version<>/]//g') &&
-          cd ./bin/Debug/ &&
-          dotnet nuget push fazor.$CURRENT_VERSION.nupkg -s https://api.nuget.org/v3/index.json --api-key ${{secrets.API_KEY}} --skip-duplicate
