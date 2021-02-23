@@ -25,7 +25,7 @@
     <Compile Include="../src/commands/New.fs" />
     <Compile Include="../src/commands/Upgrade.fs" />
     <Compile Include="../src/commands/Downgrade.fs" />
-    <Compile Include="./helpers/Dir.test.fs"/>
+    <Compile Include="helpers/Dir.test.fs"/>
     <Compile Include="Main.fs"/>
   </ItemGroup>
 

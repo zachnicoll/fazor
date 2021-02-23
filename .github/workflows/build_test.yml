@@ -39,4 +39,4 @@ jobs:
           name: solution-folder
           path: ./
       - name: Test
-        run: dotnet test --no-build --verbosity normal
+        run: cd test && dotnet test --verbosity normal
