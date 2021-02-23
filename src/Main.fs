@@ -7,6 +7,10 @@ module Main =
     open Upgrade
     open Downgrade
 
+    // TODO: dotnet publish -r linux-x64 -p:PublishSingleFile=true --self-contained false
+    // to create standalone binary and publish to a self-hosted site for download.
+    // Should only do this once this tool is truly ready to 'go live'
+
     [<EntryPoint>]
     let main argv =
         match (argv |> Array.toList) with
