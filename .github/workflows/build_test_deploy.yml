@@ -18,7 +18,7 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore
       - name: Build
-        run: dotnet build --no-restore
+        run: dotnet build --configuration Release --no-restore
       - uses: actions/upload-artifact@master
         with:
           name: solution-folder
@@ -46,9 +46,9 @@ jobs:
           name: solution-folder
           path: ./
       - name: Pack
-        run: dotnet pack
+        run: dotnet pack --configuration Release
       - name: Publish
         run: |
           CURRENT_VERSION=$(< .nuspec grep -oP '\<version\>(.*)\</version\>' | sed 's/[version<>/]//g') &&
-          cd ./bin/Debug/ &&
+          cd ./bin/Release/ &&
           dotnet nuget push fazor.$CURRENT_VERSION.nupkg -s https://api.nuget.org/v3/index.json --api-key ${{secrets.API_KEY}} --skip-duplicate
