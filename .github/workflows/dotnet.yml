@@ -35,7 +35,7 @@ jobs:
           name: solution-folder
           path: ./
       - name: Test
-        run: ls && dotnet test --no-build --verbosity normal
+        run: dotnet test --no-build --verbosity normal
 
   deploy:
     needs: [build, test]
@@ -51,5 +51,5 @@ jobs:
       - name: Publish
         run: |
           CURRENT_VERSION=$(< .nuspec grep -oP '\<version\>(.*)\</version\>' | sed 's/[version<>/]//g') &&
-          cd /home/runner/work/fazor/fazor/bin/Debug/ &&
+          cd ./bin/Debug/ &&
           dotnet nuget push fazor.$CURRENT_VERSION.nupkg -s https://api.nuget.org/v3/index.json --api-key ${{secrets.API_KEY}} --skip-duplicate
