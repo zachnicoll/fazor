@@ -12,6 +12,7 @@
     <Compile Include="src/helpers/Dir.fs" />
     <Compile Include="src/helpers/Connect.fs" />
     <Compile Include="src/helpers/Run.fs" />
+    <Compile Include="src/helpers/Input.fs" />
     <Compile Include="src/commands/Init.fs" />
     <Compile Include="src/commands/New.fs" />
     <Compile Include="src/commands/Upgrade.fs" />

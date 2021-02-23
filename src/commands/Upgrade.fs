@@ -1,11 +1,12 @@
 namespace Fazor
 
 module Upgrade =
-    open System.IO
+    open System
     open Npgsql.FSharp
     open Dir
     open Queries
     open Run
+    open Input
 
     let runUpgrade (sqlConn: Sql.SqlProps) =
         match fetchVersion sqlConn with
@@ -32,13 +33,26 @@ module Upgrade =
                             else
                                 l // Use all migrations if only initial migration has been used so far
 
-                    match scriptsToRun.Length with
+                    let max = scriptsToRun.Length
+
+                    match max with
                     | 0 -> Logger.ok "Database already up to date, no migrations to run."
                     | _ ->
-                        for script in scriptsToRun do
-                            extractAndRunScript (script + "/up.sql") sqlConn
-                            updateCurrentVersion script sqlConn
+                        Logger.info $"There are {max} upgrade scripts that can be run."
+                        Logger.info $"Enter the number of scripts you would like to run [default {max}]:"
 
-                    Logger.complete "Upgrade complete!"
+                        let count = userEnterCount max
+
+                        if count <= 0 then
+                            Logger.error
+                                "Invalid count supplied. Input must be a positive number less than or equal to the number of scripts to run."
+                        else
+                            Logger.ok $"Running {count} upgrade scripts..."
+
+                            for i = 0 to count - 1 do
+                                extractAndRunScript (scriptsToRun.[i] + "/up.sql") sqlConn
+                                updateCurrentVersion scriptsToRun.[i] sqlConn
+
+                            Logger.complete "Upgrade complete!"
 
         | None -> Logger.error "Upgrade failed!"

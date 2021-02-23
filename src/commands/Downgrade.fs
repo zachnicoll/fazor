@@ -6,6 +6,7 @@ module Downgrade =
     open Dir
     open Queries
     open Run
+    open Input
 
     let runDowngrade (sqlConn: Sql.SqlProps) =
         match fetchVersion sqlConn with
@@ -32,14 +33,28 @@ module Downgrade =
 
                     // Append initial migration to the end of the scripts array
                     scriptsToRun <- Array.append scriptsToRun [| "initial" |]
+                    
+                    let max = scriptsToRun.Length
 
-                    match scriptsToRun.Length with
+                    match max with
                     | 1 -> Logger.ok "Database already on initial version, nothing to downgrade."
                     | _ ->
-                        for i = 0 to scriptsToRun.Length - 2 do
-                            extractAndRunScript (scriptsToRun.[i] + "/down.sql") sqlConn
-                            updateCurrentVersion scriptsToRun.[i + 1] sqlConn
+                        let maxNoInitial = max - 1
+                        Logger.info $"There are {maxNoInitial} downgrade scripts that can be run."
+                        Logger.info $"Enter the number of scripts you would like to run [default {maxNoInitial}]:"
 
-                    Logger.complete "Downgrade complete!"
+                        let count = userEnterCount maxNoInitial
+
+                        if count <= 0 then
+                            Logger.error
+                                "Invalid count supplied. Input must be a positive number less than or equal to the number of scripts to run."
+                        else
+                            Logger.ok $"Running {count} downgrade scripts..."
+
+                            for i = 0 to count - 1 do
+                                extractAndRunScript (scriptsToRun.[i] + "/down.sql") sqlConn
+                                updateCurrentVersion scriptsToRun.[i + 1] sqlConn
+
+                            Logger.complete "Downgrade complete!"
 
         | None -> Logger.error "Downgrade failed!"
