@@ -1,4 +1,4 @@
-name: .NET
+name: Build, Test, Deploy
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [main]
 
 jobs:
-  build_and_deploy:
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -20,8 +20,20 @@ jobs:
         run: dotnet restore
       - name: Build
         run: dotnet build --no-restore
+  
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
       - name: Test
-        run: dotnet test --no-build --verbosity normal
+      run: dotnet test --no-build --verbosity normal
+
+  deploy:
+    needs: [build, test]
+    runs-on: ubuntu-latest
+
+    steps:
       - name: Pack
         run: dotnet pack
       - name: Publish
